@@ -2,239 +2,302 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Villa Arriba - Jenga Colors</title>
+    
+    <!-- Meta etiquetas para PWA y iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Villa Arriba">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABwD9X7AAAAA1BMVEW//wCWv4fUAAAAWElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwG744AAEbD4cAAAAAElFTkSuQmCC"> <!-- Icono de base64 como marcador de posición -->
+    
     <style>
-        /* =========================================
-           Variables y Configuración Base
-           ========================================= */
         :root {
-            --rosa-claro: #F48FB1;
-            --rosa-oscuro: #C2185B;
-            --verde-claro: #A5D6A7;
-            --verde-oscuro: #2E7D32;
-            --azul-claro: #90CAF9;
-            --azul-oscuro: #1565C0;
-            --bg-color: #f8f9fa;
-            --text-color: #333;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            /* Colores de Jenga refinados (paleta Apple) */
+            --color-rosa-claro: #FFCCE6;
+            --color-rosa-oscuro: #FF4D88;
+            --color-verde-claro: #DFFFC4;
+            --color-verde-oscuro: #4DC05F;
+            --color-azul-claro: #CCE6FF;
+            --color-azul-oscuro: #1A8CFF;
+            
+            /* Colores del sistema Apple */
+            --bg-color: #F2F2F7;
+            --ui-color: #FFFFFF;
+            --text-color: #1C1C1E;
+            --text-secondary: #8E8E93;
+            --accent-color: #007AFF;
+            
+            /* UI */
+            --radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: 0.25s ease-out;
         }
 
         body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
             background-color: var(--bg-color);
             color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            overflow: hidden;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            background-color: var(--bg-color);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        main {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            overflow: hidden; /* Evita scroll accidental al jugar */
+            flex-grow: 1;
+            width: 100%;
+            max-width: 480px;
         }
 
-        /* =========================================
-           Tipografía y Cabecera
-           ========================================= */
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #2c3e50;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        p.subtitle {
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin-top: 5px;
-        }
-
-        /* =========================================
-           Contenedor de la Ruleta y Puntero
-           ========================================= */
         .roulette-container {
             position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 0 auto;
-            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.15));
+            width: 320px;
+            height: 320px;
+            background-color: var(--ui-color);
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Puntero que indica el color ganador */
-        .pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid #2c3e50;
-            z-index: 10;
-        }
-
-        /* Diseño de la Ruleta usando conic-gradient */
         .wheel {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 4px solid #fff;
-            /* Transición suave para el giro */
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.1, 1);
-            background: conic-gradient(
-                var(--rosa-claro) 0deg 60deg,
-                var(--rosa-oscuro) 60deg 120deg,
-                var(--verde-claro) 120deg 180deg,
-                var(--verde-oscuro) 180deg 240deg,
-                var(--azul-claro) 240deg 300deg,
-                var(--azul-oscuro) 300deg 360deg
-            );
+            overflow: hidden;
+            transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
         }
 
-        /* Centro de la ruleta estético */
-        .wheel::after {
-            content: '';
+        .segment {
             position: absolute;
+            width: 50%;
+            height: 50%;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            background-color: #fff;
-            border-radius: 50%;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            transform-origin: 0% 0%;
         }
 
-        /* =========================================
-           Controles y Resultados
-           ========================================= */
-        .controls {
-            margin-top: 3rem;
+        /* Definición de segmentos (6 sectores de 60 grados cada uno) */
+        .segment:nth-child(1) { transform: rotate(0deg) skewY(-30deg); background-color: var(--color-rosa-claro); }
+        .segment:nth-child(2) { transform: rotate(60deg) skewY(-30deg); background-color: var(--color-rosa-oscuro); }
+        .segment:nth-child(3) { transform: rotate(120deg) skewY(-30deg); background-color: var(--color-verde-claro); }
+        .segment:nth-child(4) { transform: rotate(180deg) skewY(-30deg); background-color: var(--color-verde-oscuro); }
+        .segment:nth-child(5) { transform: rotate(240deg) skewY(-30deg); background-color: var(--color-azul-claro); }
+        .segment:nth-child(6) { transform: rotate(300deg) skewY(-30deg); background-color: var(--color-azul-oscuro); }
+
+        .segment-inner {
+            width: 200%;
+            height: 200%;
+            transform: skewY(30deg);
+        }
+
+        .pointer {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid var(--text-color);
+            z-index: 10;
+        }
+
+        .result-display {
+            width: 100%;
+            background-color: var(--ui-color);
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-top: 40px;
             text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .result-display.visible {
+            opacity: 1;
+        }
+
+        .result-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .color-winner {
+            font-size: 22px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        footer {
+            width: 100%;
+            padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
+            justify-content: center;
         }
 
-        button {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
+        .spin-button {
+            background-color: var(--accent-color);
             color: white;
-            background-color: #2c3e50;
             border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s, background-color 0.2s;
-            text-transform: uppercase;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        button:disabled {
-            background-color: #95a5a6;
-            cursor: not-allowed;
-            transform: scale(1);
-        }
-
-        .result {
-            font-size: 1.5rem;
+            border-radius: 20px;
+            padding: 16px 60px;
+            font-size: 18px;
             font-weight: 700;
-            min-height: 2rem;
-            text-transform: uppercase;
-            transition: color 0.3s;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
+            transition: transform var(--transition), box-shadow var(--transition);
+            width: 100%;
+            max-width: 320px;
         }
+
+        .spin-button:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 4px rgba(0, 122, 255, 0.2);
+        }
+
+        .spin-button:disabled {
+            background-color: var(--text-secondary);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
     </style>
 </head>
 <body>
 
     <header>
         <h1>Villa Arriba</h1>
-        <p class="subtitle">Ruleta Jenga</p>
+        <div class="subtitle">Ruleta Jenga Colors</div>
     </header>
 
-    <div class="roulette-container">
-        <div class="pointer"></div>
-        <div class="wheel" id="wheel"></div>
-    </div>
+    <main>
+        <div class="roulette-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel">
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+                <div class="segment"></div>
+            </div>
+        </div>
 
-    <div class="controls">
-        <button id="spinBtn">Tirar Ruleta</button>
-        <div class="result" id="resultDisplay">¡Preparados!</div>
-    </div>
+        <div class="result-display" id="resultDisplay">
+            <div class="result-text">¡Toca este color!</div>
+            <div class="color-winner" id="colorWinner">...</div>
+        </div>
+    </main>
+
+    <footer>
+        <button class="spin-button" id="spinButton">Girar</button>
+    </footer>
 
     <script>
-        /* =========================================
-           Lógica de la Ruleta
-           ========================================= */
         const wheel = document.getElementById('wheel');
-        const spinBtn = document.getElementById('spinBtn');
+        const spinButton = document.getElementById('spinButton');
         const resultDisplay = document.getElementById('resultDisplay');
+        const colorWinner = document.getElementById('colorWinner');
 
-        // Mantenemos el estado de rotación global para que los giros sean acumulativos
+        let isSpinning = false;
         let currentRotation = 0;
 
-        // Definición de las porciones (60 grados cada una)
-        const slices = [
-            { name: 'Rosa Claro', min: 0, max: 60, color: '#F48FB1' },
-            { name: 'Rosa Oscuro', min: 60, max: 120, color: '#C2185B' },
-            { name: 'Verde Claro', min: 120, max: 180, color: '#A5D6A7' },
-            { name: 'Verde Oscuro', min: 180, max: 240, color: '#2E7D32' },
-            { name: 'Azul Claro', min: 240, max: 300, color: '#90CAF9' },
-            { name: 'Azul Oscuro', min: 300, max: 360, color: '#1565C0' }
+        // Definición de los 6 colores
+        const segments = [
+            { name: 'Rosa Claro', color: '#FFCCE6' },
+            { name: 'Rosa Oscuro', color: '#FF4D88' },
+            { name: 'Verde Claro', color: '#DFFFC4' },
+            { name: 'Verde Oscuro', color: '#4DC05F' },
+            { name: 'Azul Claro', color: '#CCE6FF' },
+            { name: 'Azul Oscuro', color: '#1A8CFF' }
         ];
 
-        spinBtn.addEventListener('click', () => {
-            // Deshabilitar botón durante el giro para evitar bugs
-            spinBtn.disabled = true;
-            resultDisplay.textContent = 'Girando...';
-            resultDisplay.style.color = '#7f8c8d';
+        function spin() {
+            if (isSpinning) return;
+            isSpinning = true;
 
-            // Cálculo de rotación: de 5 a 10 vueltas completas extra + grados aleatorios
-            const extraSpins = Math.floor(Math.random() * 5 + 5) * 360; 
-            const randomDegree = Math.floor(Math.random() * 360);
-            
-            currentRotation += extraSpins + randomDegree;
-            
-            // Aplicar la transformación CSS
-            wheel.style.transform = `rotate(${currentRotation}deg)`;
+            // Desactivar UI durante el giro
+            spinButton.disabled = true;
+            resultDisplay.classList.remove('visible');
 
-            // Esperar a que termine la animación (4000ms coincidiendo con CSS)
+            // Calcular un giro aleatorio (entre 10 y 20 vueltas + un segmento aleatorio)
+            const spins = 10 + Math.random() * 10;
+            const extraDegrees = Math.random() * 360;
+            const totalRotation = spins * 360 + extraDegrees;
+
+            // Mantener la rotación acumulada para el próximo giro
+            currentRotation += totalRotation;
+            wheel.style.transform = `rotate(-${currentRotation}deg)`; // Girar en sentido antihorario
+
+            // Esperar a que la animación termine (4s)
             setTimeout(() => {
-                // Cálculo del ángulo real en el que se ha detenido la ruleta
-                const actualDegree = currentRotation % 360;
-                
-                // Dado que la ruleta gira en sentido horario, el punto "0" se mueve.
-                // Para saber qué hay arriba (en el puntero), calculamos el inverso:
-                const pointerAngle = (360 - actualDegree) % 360;
+                isSpinning = false;
+                spinButton.disabled = false;
 
-                // Encontrar el color ganador coherente con el ángulo actual
-                const winningSlice = slices.find(s => pointerAngle >= s.min && pointerAngle < s.max);
+                // Calcular qué segmento ha caído bajo el puntero
+                const actualRotation = currentRotation % 360;
+                const segmentDegrees = 360 / segments.length;
+                const winningSegmentIndex = Math.floor(actualRotation / segmentDegrees);
+                const winningSegment = segments[winningSegmentIndex];
 
-                // Actualizar interfaz
-                resultDisplay.textContent = `¡Toca: ${winningSlice.name}!`;
-                resultDisplay.style.color = winningSlice.color;
-                
-                // Rehabilitar botón
-                spinBtn.disabled = false;
-            }, 4000); 
+                // Mostrar resultado
+                colorWinner.innerText = winningSegment.name;
+                colorWinner.style.color = winningSegment.color;
+                resultDisplay.classList.add('visible');
+
+            }, 4000); // Coincide con la duración del giro en CSS
+        }
+
+        spinButton.addEventListener('click', spin);
+
+        // Añadir soporte para pantallas táctiles sin retraso
+        spinButton.addEventListener('touchstart', (e) => {
+            if (!isSpinning) {
+                e.preventDefault();
+                spin();
+            }
         });
+
     </script>
 </body>
 </html>
