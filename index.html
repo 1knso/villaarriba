@@ -5,201 +5,338 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Villa Arriba - Jenga Colors</title>
     
-    <!-- Meta etiquetas para PWA y iOS -->
+    <!-- Meta etiquetas para PWA (Apple) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Villa Arriba">
-    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABwD9X7AAAAA1BMVEW//wCWv4fUAAAAWElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwG744AAEbD4cAAAAAElFTkSuQmCC"> <!-- Icono de base64 como marcador de posición -->
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAMAAABwD9X7AAAAA1BMVEW//wCWv4fUAAAAWElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwG744AAEbD4cAAAAAElFTkSuQmCC">
     
     <style>
+        /* =========================================
+           Variables y Sistema de Diseño (Estilo Apple)
+           ========================================= */
         :root {
-            /* Colores de Jenga refinados (paleta Apple) */
-            --color-rosa-claro: #FFCCE6;
-            --color-rosa-oscuro: #FF4D88;
-            --color-verde-claro: #DFFFC4;
-            --color-verde-oscuro: #4DC05F;
-            --color-azul-claro: #CCE6FF;
-            --color-azul-oscuro: #1A8CFF;
+            /* Colores de la Ruleta */
+            --rosa-claro: #FFB3D9;
+            --rosa-oscuro: #FF3377;
+            --verde-claro: #B3FFC6;
+            --verde-oscuro: #33CC55;
+            --azul-claro: #B3D9FF;
+            --azul-oscuro: #0066FF;
             
-            /* Colores del sistema Apple */
-            --bg-color: #F2F2F7;
-            --ui-color: #FFFFFF;
-            --text-color: #1C1C1E;
+            /* Colores UI */
+            --bg-base: #F2F2F7;       /* Fondo general iOS */
+            --bg-surface: #FFFFFF;    /* Fondo de tarjetas */
+            --text-primary: #1C1C1E;
             --text-secondary: #8E8E93;
-            --accent-color: #007AFF;
+            --accent: #007AFF;        /* Azul Apple */
+            --border-color: #E5E5EA;
             
-            /* UI */
-            --radius: 12px;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition: 0.25s ease-out;
+            /* Medidas */
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            height: 100vh;
-            overflow: hidden;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
+            padding-top: var(--safe-top);
+            padding-bottom: calc(100px + var(--safe-bottom)); /* Espacio para el botón fijo */
         }
 
+        /* =========================================
+           Cabecera
+           ========================================= */
         header {
             width: 100%;
             text-align: center;
-            padding: 20px 0;
-            background-color: var(--bg-color);
+            padding: 20px;
+            margin-bottom: 10px;
         }
 
         h1 {
             font-size: 28px;
             font-weight: 800;
-            margin: 0;
-            color: var(--text-color);
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
-            font-size: 14px;
+            font-size: 15px;
             color: var(--text-secondary);
             margin-top: 4px;
         }
 
-        main {
+        /* =========================================
+           Contenedor Principal (Max-width para tablets)
+           ========================================= */
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 0 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            width: 100%;
-            max-width: 480px;
+            gap: 30px;
         }
 
-        .roulette-container {
+        /* =========================================
+           Ruleta (Diseño Perfecto con Conic Gradient)
+           ========================================= */
+        .roulette-wrapper {
             position: relative;
-            width: 320px;
-            height: 320px;
-            background-color: var(--ui-color);
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            box-shadow: var(--shadow);
+            background-color: var(--bg-surface);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 30px;
+            background-color: var(--text-primary);
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+            z-index: 10;
         }
 
         .wheel {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            overflow: hidden;
-            transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            /* El gradient crea cortes precisos sin bugs visuales */
+            background: conic-gradient(
+                var(--rosa-claro) 0deg 60deg,
+                var(--rosa-oscuro) 60deg 120deg,
+                var(--verde-claro) 120deg 180deg,
+                var(--verde-oscuro) 180deg 240deg,
+                var(--azul-claro) 240deg 300deg,
+                var(--azul-oscuro) 300deg 360deg
+            );
+            transition: transform 4s cubic-bezier(0.1, 0.9, 0.2, 1); /* Curva muy suave */
             position: relative;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: inset 0 0 0 2px rgba(255,255,255,0.2);
         }
 
-        .segment {
+        /* Botón central decorativo de la ruleta */
+        .wheel::after {
+            content: '';
             position: absolute;
-            width: 50%;
-            height: 50%;
             top: 50%;
             left: 50%;
-            transform-origin: 0% 0%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            background-color: var(--bg-surface);
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
 
-        /* Definición de segmentos (6 sectores de 60 grados cada uno) */
-        .segment:nth-child(1) { transform: rotate(0deg) skewY(-30deg); background-color: var(--color-rosa-claro); }
-        .segment:nth-child(2) { transform: rotate(60deg) skewY(-30deg); background-color: var(--color-rosa-oscuro); }
-        .segment:nth-child(3) { transform: rotate(120deg) skewY(-30deg); background-color: var(--color-verde-claro); }
-        .segment:nth-child(4) { transform: rotate(180deg) skewY(-30deg); background-color: var(--color-verde-oscuro); }
-        .segment:nth-child(5) { transform: rotate(240deg) skewY(-30deg); background-color: var(--color-azul-claro); }
-        .segment:nth-child(6) { transform: rotate(300deg) skewY(-30deg); background-color: var(--color-azul-oscuro); }
-
-        .segment-inner {
-            width: 200%;
-            height: 200%;
-            transform: skewY(30deg);
-        }
-
-        .pointer {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(-10px);
-            width: 0;
-            height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 30px solid var(--text-color);
-            z-index: 10;
-        }
-
-        .result-display {
+        /* =========================================
+           Resultado
+           ========================================= */
+        .result-card {
             width: 100%;
-            background-color: var(--ui-color);
-            padding: 16px 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-top: 40px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity var(--transition);
-        }
-
-        .result-display.visible {
-            opacity: 1;
-        }
-
-        .result-text {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-
-        .color-winner {
-            font-size: 22px;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-top: 6px;
-        }
-
-        footer {
-            width: 100%;
+            background: var(--bg-surface);
             padding: 20px;
-            display: flex;
-            justify-content: center;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
         }
 
-        .spin-button {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            padding: 16px 60px;
+        .result-card.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .result-color {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 5px;
+        }
+
+        /* =========================================
+           Panel de Jugadores
+           ========================================= */
+        .players-section {
+            width: 100%;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .players-header {
             font-size: 18px;
             font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-player-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-player-input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            background-color: var(--bg-base);
+        }
+
+        .add-player-input:focus {
+            border-color: var(--accent);
+        }
+
+        .add-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0 20px;
+            font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 122, 255, 0.3);
-            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .add-btn:active { opacity: 0.8; }
+
+        .players-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .player-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .player-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .score-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .score-badge {
+            background-color: var(--bg-base);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 15px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .win-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,122,255,0.3);
+        }
+        
+        .win-btn:active { transform: scale(0.9); }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            padding: 10px 0;
+        }
+
+        /* =========================================
+           Botón Fijo de Tirar (Floating Action)
+           ========================================= */
+        .fixed-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            max-width: 320px;
+            padding: 20px;
+            padding-bottom: calc(20px + var(--safe-bottom));
+            background: rgba(242, 242, 247, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            z-index: 100;
         }
 
-        .spin-button:active {
-            transform: scale(0.97);
-            box-shadow: 0 2px 4px rgba(0, 122, 255, 0.2);
+        .spin-btn {
+            width: 100%;
+            max-width: 350px;
+            background-color: var(--text-primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
         }
 
-        .spin-button:disabled {
-            background-color: var(--text-secondary);
-            box-shadow: none;
-            cursor: not-allowed;
-        }
+        .spin-btn:active { transform: scale(0.96); }
+        .spin-btn:disabled { background-color: var(--text-secondary); cursor: not-allowed; }
 
     </style>
 </head>
@@ -207,96 +344,161 @@
 
     <header>
         <h1>Villa Arriba</h1>
-        <div class="subtitle">Ruleta Jenga Colors</div>
+        <div class="subtitle">Jenga Colors</div>
     </header>
 
-    <main>
-        <div class="roulette-container">
+    <div class="container">
+        
+        <!-- Ruleta -->
+        <div class="roulette-wrapper">
             <div class="pointer"></div>
-            <div class="wheel" id="wheel">
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-            </div>
+            <div class="wheel" id="wheel"></div>
         </div>
 
-        <div class="result-display" id="resultDisplay">
-            <div class="result-text">¡Toca este color!</div>
-            <div class="color-winner" id="colorWinner">...</div>
+        <!-- Resultado de la Ruleta -->
+        <div class="result-card" id="resultCard">
+            <div class="result-title">Bloque a retirar</div>
+            <div class="result-color" id="resultText">-</div>
         </div>
-    </main>
 
-    <footer>
-        <button class="spin-button" id="spinButton">Girar</button>
-    </footer>
+        <!-- Gestión de Jugadores -->
+        <div class="players-section">
+            <div class="players-header">Jugadores</div>
+            
+            <form class="add-player-form" id="addPlayerForm">
+                <input type="text" class="add-player-input" id="playerNameInput" placeholder="Nombre del jugador..." autocomplete="off">
+                <button type="submit" class="add-btn">Añadir</button>
+            </form>
+
+            <ul class="players-list" id="playersList">
+                <li class="empty-state" id="emptyState">Añade jugadores para llevar la cuenta de victorias.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Botón de Girar -->
+    <div class="fixed-action-bar">
+        <button class="spin-btn" id="spinBtn">Girar Ruleta</button>
+    </div>
 
     <script>
+        /* =========================================
+           LÓGICA DE LA RULETA
+           ========================================= */
         const wheel = document.getElementById('wheel');
-        const spinButton = document.getElementById('spinButton');
-        const resultDisplay = document.getElementById('resultDisplay');
-        const colorWinner = document.getElementById('colorWinner');
+        const spinBtn = document.getElementById('spinBtn');
+        const resultCard = document.getElementById('resultCard');
+        const resultText = document.getElementById('resultText');
 
         let isSpinning = false;
         let currentRotation = 0;
 
-        // Definición de los 6 colores
+        // Definimos los cortes de conic-gradient (cada 60 grados)
+        // El grado 0 en conic-gradient está a las 12 en punto.
         const segments = [
-            { name: 'Rosa Claro', color: '#FFCCE6' },
-            { name: 'Rosa Oscuro', color: '#FF4D88' },
-            { name: 'Verde Claro', color: '#DFFFC4' },
-            { name: 'Verde Oscuro', color: '#4DC05F' },
-            { name: 'Azul Claro', color: '#CCE6FF' },
-            { name: 'Azul Oscuro', color: '#1A8CFF' }
+            { name: 'Rosa Claro', color: 'var(--rosa-claro)', fontColor: '#FF3377', min: 0, max: 60 },
+            { name: 'Rosa Oscuro', color: 'var(--rosa-oscuro)', fontColor: '#FF3377', min: 60, max: 120 },
+            { name: 'Verde Claro', color: 'var(--verde-claro)', fontColor: '#33CC55', min: 120, max: 180 },
+            { name: 'Verde Oscuro', color: 'var(--verde-oscuro)', fontColor: '#228B22', min: 180, max: 240 },
+            { name: 'Azul Claro', color: 'var(--azul-claro)', fontColor: '#0066FF', min: 240, max: 300 },
+            { name: 'Azul Oscuro', color: 'var(--azul-oscuro)', fontColor: '#0044CC', min: 300, max: 360 }
         ];
 
-        function spin() {
+        spinBtn.addEventListener('click', () => {
             if (isSpinning) return;
             isSpinning = true;
+            spinBtn.disabled = true;
+            
+            resultCard.classList.remove('active');
 
-            // Desactivar UI durante el giro
-            spinButton.disabled = true;
-            resultDisplay.classList.remove('visible');
+            // De 6 a 12 vueltas completas + grados aleatorios
+            const extraSpins = Math.floor(Math.random() * 6 + 6) * 360; 
+            const randomDegree = Math.floor(Math.random() * 360);
+            
+            currentRotation += (extraSpins + randomDegree);
+            
+            // Aplicamos rotación horario
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
 
-            // Calcular un giro aleatorio (entre 10 y 20 vueltas + un segmento aleatorio)
-            const spins = 10 + Math.random() * 10;
-            const extraDegrees = Math.random() * 360;
-            const totalRotation = spins * 360 + extraDegrees;
-
-            // Mantener la rotación acumulada para el próximo giro
-            currentRotation += totalRotation;
-            wheel.style.transform = `rotate(-${currentRotation}deg)`; // Girar en sentido antihorario
-
-            // Esperar a que la animación termine (4s)
             setTimeout(() => {
                 isSpinning = false;
-                spinButton.disabled = false;
+                spinBtn.disabled = false;
 
-                // Calcular qué segmento ha caído bajo el puntero
-                const actualRotation = currentRotation % 360;
-                const segmentDegrees = 360 / segments.length;
-                const winningSegmentIndex = Math.floor(actualRotation / segmentDegrees);
-                const winningSegment = segments[winningSegmentIndex];
+                // Calculamos qué color ha quedado arriba
+                // Como giramos en horario, el puntero "0" se mueve hacia atrás relativo a la rueda
+                const actualDegree = currentRotation % 360;
+                const pointerAngle = (360 - actualDegree) % 360;
 
-                // Mostrar resultado
-                colorWinner.innerText = winningSegment.name;
-                colorWinner.style.color = winningSegment.color;
-                resultDisplay.classList.add('visible');
+                const winningSegment = segments.find(s => pointerAngle >= s.min && pointerAngle < s.max);
 
-            }, 4000); // Coincide con la duración del giro en CSS
+                resultText.textContent = winningSegment.name;
+                resultText.style.color = winningSegment.fontColor;
+                resultCard.classList.add('active');
+
+            }, 4000); // 4s coincidiendo con la transición CSS
+        });
+
+        /* =========================================
+           LÓGICA DE JUGADORES (SCOREBOARD)
+           ========================================= */
+        const addPlayerForm = document.getElementById('addPlayerForm');
+        const playerNameInput = document.getElementById('playerNameInput');
+        const playersList = document.getElementById('playersList');
+        const emptyState = document.getElementById('emptyState');
+
+        // Estado de la aplicación
+        let players = [];
+
+        function renderPlayers() {
+            // Limpiamos la lista
+            playersList.innerHTML = '';
+
+            if (players.length === 0) {
+                playersList.appendChild(emptyState);
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            players.forEach((player, index) => {
+                const li = document.createElement('li');
+                li.className = 'player-item';
+                
+                li.innerHTML = `
+                    <span class="player-name">${player.name}</span>
+                    <div class="score-controls">
+                        <span class="score-badge">${player.score}</span>
+                        <button class="win-btn" onclick="addScore(${index})">+</button>
+                    </div>
+                `;
+                playersList.appendChild(li);
+            });
         }
 
-        spinButton.addEventListener('click', spin);
+        addPlayerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = playerNameInput.value.trim();
+            if (name === '') return;
 
-        // Añadir soporte para pantallas táctiles sin retraso
-        spinButton.addEventListener('touchstart', (e) => {
-            if (!isSpinning) {
-                e.preventDefault();
-                spin();
-            }
+            players.push({ name: name, score: 0 });
+            playerNameInput.value = '';
+            
+            // Ocultar teclado en móviles
+            playerNameInput.blur(); 
+            
+            renderPlayers();
         });
+
+        // Función global para poder ser llamada desde el HTML dinámico
+        window.addScore = function(index) {
+            players[index].score += 1;
+            renderPlayers();
+        };
+
+        // Render inicial
+        renderPlayers();
 
     </script>
 </body>
